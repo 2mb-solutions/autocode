@@ -16,6 +16,8 @@ This plugin, developed by [2MB Solutions](http://2mb.solutions/), allows you to 
 
 For more on 2MB, please visit (http://2mb.solutions/).
 
+Note that all development now takes place at [github](http://github.com/2mb-solutions/autocode/).
+
 == Installation ==
 
 Installation is extremely simple!
@@ -58,6 +60,10 @@ Do not worry, the fix is a simple one:
 1. Delete or move the inline php plugin folder on your server, and the blog should be accessible again.
 1. Now upgrade to 2mb autocode version 1.1.2, which fixes this particular issue.
 1. Optional but highly recommended: Replace all [exec] or <exec> tags with [php] tags to allow 2mb autocode to do the php for you, and you will have no need for inline php.
+
+= Why isn't any development taking place at wordpress.org? =
+
+We have now moved our official development version to [github](http://github.com/2mb-solutions/autocode/). Feel free to test the code if you wish, and/or open issues over there although any issues or problems reported on the wordpress.org forums will also be dealt with.
 
 == Screenshots ==
 
