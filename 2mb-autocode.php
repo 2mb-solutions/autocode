@@ -5,7 +5,7 @@ Author URI: http://2mb.solutions/
 Description: This plugin allows you to place predetermined text, php, or shortcodes at the top and/or bottom of posts.
 Plugin Name: 2MB Autocode
 Plugin URI: http://2mb.solutions/plugins/autocode
-Version: 1.2.1
+Version: 1.2.2
 License: Gpl v2 or later
 */
 
@@ -215,10 +215,11 @@ function twomb_autocode_options() {
     This plugin is rather simple, but to make it as easy as possible to use this plugin, we will include some documentation here:
     <br>
     <ul>
-    <li>To stop the text from displaying at the top or bottom of a post and the homepage, enter ##no_top## for the top text or ##no_bottom## for the bottom text anywhere in the post.</li>
-    <li>To stop the text from displaying selectively on the homepage *or* the post page, enter ##no_top_home## or ##no_bottom_home## for the homepage, or ##no_top_post## or ##no_bottom_post## for the post page.</li>
-    <li>To enable the top and/or bottom text when it is normally not enabled on the homepage, add ##do_top_home## or ##do_bottom_home## to anywhere on the post.</li>
+    <li>To stop the text from displaying at the top or bottom of a post and the homepage, enter ##no_top## for the top text or ##no_bottom## for the bottom text anywhere in the post. Alternatively, simply select the appropriate option on the post edit page itself.</li>
+    <li>To stop the text from displaying selectively on the homepage *or* the post page, enter ##no_top_home## or ##no_bottom_home## for the homepage, or ##no_top_post## or ##no_bottom_post## for the post page. Once again, these options can be set in the post editor.</li>
+    <li>To enable the top and/or bottom text when it is normally not enabled on the homepage, add ##do_top_home## or ##do_bottom_home## to anywhere on the post. And again, post editor... you get it.</li>
     <li>To include php code to run in a page, enter [php]CODE HERE[/php] anywhere in the post. Note: You should not include the beginning opening or end closing php tag, but you may exit php and re-enter by using a closing then opening tag.</li>
+<li>To place the top or bottom text at a different point than at the top or bottom, enter ##do_bottom## or ##do_top## where you want them in the post editor.</li>
     </ul>
     <br>
     Remember, feedback is most welcome! <a href="http://2mb.solutions/">Visit our homepage to suggest a feature, a new plugin, and more</a>.

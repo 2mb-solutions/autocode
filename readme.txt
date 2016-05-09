@@ -3,8 +3,8 @@ Contributors: lilmike, stormdragon2976
 Donate link: http://2mb.solutions/donate
 Tags: autocode, code placement, automatic, php, html, preformatted text, top, bottom, modify posts
 Requires at least: 3.0
-Tested up to: 4.2.3
-Stable tag: 1.2.1
+Tested up to: 4.5.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,10 @@ No screen shots at the moment. Sorry!
 
 == Changelog ==
 
+= 1.2.2 =
+
+* Documentation updates.
+
 = 1.2.1 =
 
 *Fixed a bug allowing post data to echo twice if using ##do_top## or ##do_bottom##.
@@ -85,6 +89,7 @@ No screen shots at the moment. Sorry!
 *Fixed a nasty bug in which text on each post's single page was suppressed when the home checkbox was unchecked. Whoops?
 
 = 1.1.2 =
+
 *Very important! If you were using inline php to put php on your blog before, please upgrade to this version or uninstall inline php before upgrading to 2mb autocode 1.1. There was a problem that caused the two plugins to conflict, which has now been solved. *** NOTE *** if your blog is not accessible due to the conflict, do the following: Delete the inline php folder from your server, and all should be well. We're sorry for any inconvenience -- sometimes even plugin developers can screw up ;-).
 
 = 1.1.1 =
