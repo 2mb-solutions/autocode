@@ -9,17 +9,18 @@ Version: 1.2.2
 License: Gpl v2 or later
 */
 // Create a helper function for easy SDK access.
-function 2a_fs() {
-    global $2a_fs;
+function twomb_autocode_fs() {
+    global $twomb_autocode_fs;
 
-    if ( ! isset( $2a_fs ) ) {
+    if ( ! isset( $twomb_autocode_fs ) ) {
         // Include Freemius SDK.
         require_once dirname(__FILE__) . '/freemius/start.php';
 
-        $2a_fs = fs_dynamic_init( array(
+        $twomb_autocode_fs = fs_dynamic_init( array(
             'id'                => '289',
             'slug'              => '2mb-autocode',
             'public_key'        => 'pk_e3559cc2e1e944ab0daa1259530a9',
+            'secret_key' => 'sk_%FX!:HI!Z(xbnTxitj2{1So=UR%uH',
             'is_premium'        => false,
             'has_addons'        => false,
             'has_paid_plans'    => false,
@@ -34,11 +35,11 @@ function 2a_fs() {
         ) );
     }
 
-    return $2a_fs;
+    return $twomb_autocode_fs;
 }
 
 // Init Freemius.
-2a_fs();
+twomb_autocode_fs();
 
 add_filter('the_content', 'twomb_autocode_modify_content', 9999);
 function twomb_autocode_modify_content($content) {
