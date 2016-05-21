@@ -20,7 +20,6 @@ function twomb_autocode_fs() {
             'id'                => '289',
             'slug'              => '2mb-autocode',
             'public_key'        => 'pk_e3559cc2e1e944ab0daa1259530a9',
-            'secret_key' => 'sk_%FX!:HI!Z(xbnTxitj2{1So=UR%uH',
             'is_premium'        => false,
             'has_addons'        => false,
             'has_paid_plans'    => false,
