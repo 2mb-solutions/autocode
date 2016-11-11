@@ -3,8 +3,8 @@ Contributors: lilmike, stormdragon2976
 Donate link: http://2mb.solutions/donate
 Tags: autocode, code placement, automatic, php, html, preformatted text, top, bottom, modify posts
 Requires at least: 3.0
-Tested up to: 4.5.1
-Stable tag: 1.2.2
+Tested up to: 4.6.1
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ We have now moved our official development version to [github](http://github.com
 No screen shots at the moment. Sorry!
 
 == Changelog ==
+
+= 1.2.3 =
+
+* added freemius integration, and hopefully made the text at the bottom of posts come before any widgets.
 
 = 1.2.2 =
 
