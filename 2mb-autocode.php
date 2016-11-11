@@ -24,7 +24,7 @@ function twomb_autocode_fs() {
             'has_addons'        => false,
             'has_paid_plans'    => false,
             'menu'              => array(
-                'slug'       => twomb-autocode-settings,
+                'slug'       => 'twomb-autocode-settings',
                 'account'    => false,
                 'contact'    => false,
                 'parent'     => array(
@@ -40,7 +40,7 @@ function twomb_autocode_fs() {
 // Init Freemius.
 twomb_autocode_fs();
 
-add_filter('the_content', 'twomb_autocode_modify_content', 9999);
+add_filter('the_content', 'twomb_autocode_modify_content', 8);
 function twomb_autocode_modify_content($content) {
     $count = 0;
     $content = str_replace('##no_top##', '', $content, $count);

@@ -78,6 +78,58 @@
 		</tr>
 		</tbody>
 	</table>
+<?php
+	if ( ! defined( 'FS_API__ADDRESS' ) ) {
+		define( 'FS_API__ADDRESS', '://api.freemius.com' );
+	}
+	if ( ! defined( 'FS_API__SANDBOX_ADDRESS' ) ) {
+		define( 'FS_API__SANDBOX_ADDRESS', '://sandbox-api.freemius.com' );
+	}
+
+	$defines = array(
+		array(
+			'key' => 'WP_FS__REMOTE_ADDR',
+			'val' => WP_FS__REMOTE_ADDR,
+		),
+		array(
+			'key' => 'WP_FS__ADDRESS_PRODUCTION',
+			'val' => WP_FS__ADDRESS_PRODUCTION,
+		),
+		array(
+			'key' => 'FS_API__ADDRESS',
+			'val' => FS_API__ADDRESS,
+		),
+		array(
+			'key' => 'FS_API__SANDBOX_ADDRESS',
+			'val' => FS_API__SANDBOX_ADDRESS,
+		),
+		array(
+			'key' => 'WP_FS__DIR',
+			'val' => WP_FS__DIR,
+		),
+	)
+?>
+	<br>
+	<table class="widefat">
+		<thead>
+		<tr>
+			<th><?php _efs( 'key' ) ?></th>
+			<th><?php _efs( 'value' ) ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php $alternate = false;
+			foreach ( $defines as $p ) : ?>
+				<tr<?php if ( $alternate ) {
+					echo ' class="alternate"';
+				} ?>>
+					<td><?php echo $p['key'] ?></td>
+					<td><?php echo $p['val'] ?></td>
+				</tr>
+				<?php $alternate = ! $alternate ?>
+			<?php endforeach ?>
+		</tbody>
+	</table>
 	<h2><?php _efs( 'sdk-versions' ) ?></h2>
 	<table id="fs_sdks" class="widefat">
 		<thead>
@@ -148,6 +200,7 @@
 <?php endif ?>
 <?php
 	/**
+	 * @var array     $VARS
 	 * @var FS_Site[] $sites
 	 */
 	$sites = $VARS['sites'];
@@ -239,11 +292,56 @@
 			<tr>
 				<td><?php echo $user->id ?></td>
 				<td><?php echo $user->get_name() ?></td>
-				<td><a href="mailto:<?php esc_attr_e($user->email) ?>"><?php echo $user->email ?></a></td>
+				<td><a href="mailto:<?php echo esc_attr( $user->email ) ?>"><?php echo $user->email ?></a></td>
 				<td><?php echo json_encode( $user->is_verified ) ?></td>
 				<td><?php echo $user->public_key ?></td>
 				<td><?php echo $user->secret_key ?></td>
 			</tr>
+		<?php endforeach ?>
+		</tbody>
+	</table>
+<?php endif ?>
+<?php
+	/**
+	 * @var FS_Plugin_License[] $licenses
+	 */
+	$licenses = $VARS['licenses'];
+?>
+<?php if ( is_array( $licenses ) && 0 < count( $licenses ) ) : ?>
+	<h2><?php _efs( 'licenses' ) ?></h2>
+	<table id="fs_users" class="widefat">
+		<thead>
+		<tr>
+			<th><?php _efs( 'id' ) ?></th>
+			<th><?php _efs( 'plugin-id' ) ?></th>
+			<th><?php _efs( 'user-id' ) ?></th>
+			<th><?php _efs( 'plan-id' ) ?></th>
+			<th><?php _efs( 'quota' ) ?></th>
+			<th><?php _efs( 'activated' ) ?></th>
+			<th><?php _efs( 'blocking' ) ?></th>
+			<th><?php _efs( 'license-key' ) ?></th>
+			<th><?php _efs( 'expiration' ) ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach ( $licenses as $slug => $module_licenses ) : ?>
+			<?php foreach ( $module_licenses as $id => $licenses ) : ?>
+				<?php if ( is_array( $licenses ) && 0 < count( $licenses ) ) : ?>
+					<?php foreach ( $licenses as $license ) : ?>
+						<tr>
+							<td><?php echo $license->id ?></td>
+							<td><?php echo $license->plugin_id ?></td>
+							<td><?php echo $license->user_id ?></td>
+							<td><?php echo $license->plan_id ?></td>
+							<td><?php echo $license->is_unlimited() ? 'Unlimited' : ( $license->is_single_site() ? 'Single Site' : $license->quota ) ?></td>
+							<td><?php echo $license->activated ?></td>
+							<td><?php echo $license->is_block_features ? 'Blocking' : 'Flexible' ?></td>
+							<td><?php echo htmlentities( $license->secret_key ) ?></td>
+							<td><?php echo $license->expiration ?></td>
+						</tr>
+					<?php endforeach ?>
+				<?php endif ?>
+			<?php endforeach ?>
 		<?php endforeach ?>
 		</tbody>
 	</table>

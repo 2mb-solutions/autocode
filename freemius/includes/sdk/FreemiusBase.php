@@ -33,7 +33,7 @@
 	);
 
 	foreach ( $exceptions as $e ) {
-		require FS_SDK__EXCEPTIONS_PATH . $e . '.php';
+		require_once FS_SDK__EXCEPTIONS_PATH . $e . '.php';
 	}
 
 	abstract class Freemius_Api_Base {
@@ -47,7 +47,7 @@
 		protected $_isSandbox;
 
 		/**
-		 * @param string $pScope     'app', 'developer', 'user' or 'install'.
+		 * @param string $pScope     'app', 'developer', 'plugin', 'user' or 'install'.
 		 * @param number $pID        Element's id.
 		 * @param string $pPublic    Public key.
 		 * @param string $pSecret    Element's secret key.
