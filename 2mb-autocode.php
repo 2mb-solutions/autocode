@@ -1,11 +1,11 @@
 <?php
 /*
 Author: 2MB Solutions
-Author URI: http://2mb.solutions/
+Author URI: https://2mb.solutions/
 Description: This plugin allows you to place predetermined text, php, or shortcodes at the top and/or bottom of posts.
 Plugin Name: 2MB Autocode
-Plugin URI: http://2mb.solutions/plugins/autocode
-Version: 1.2.3
+Plugin URI: https://2mb.solutions/plugins/autocode
+Version: 1.2.4
 License: Gpl v2 or later
 */
 // Create a helper function for easy SDK access.
@@ -40,21 +40,21 @@ function twomb_autocode_fs() {
 // Init Freemius.
 twomb_autocode_fs();
 
-add_filter('the_content', 'twomb_autocode_modify_content', 8);
+add_filter('the_content', 'twomb_autocode_modify_content', 8); //Actually add top and bottom content.
 function twomb_autocode_modify_content($content) {
-    $count = 0;
+    $count = 0; //Do'nt include top content if ##no_top## is set.
     $content = str_replace('##no_top##', '', $content, $count);
-    $count2 = 0;
+    $count2 = 0; //Same, but for bottom.
     $content = str_replace('##no_bottom##', '', $content, $count2);
-    $count3 = 0;
+    $count3 = 0; //Same, but only for top content on the home page.
     $content = str_replace('##no_top_home##', '', $content, $count3);
-    $count4 = 0;
+    $count4 = 0; //Ditto, but for bottom home content.
     $content = str_replace('##no_bottom_home##', '', $content, $count4);
-    $count5 = 0;
+    $count5 = 0; //No top content on the single post page.
     $content = str_replace('##no_top_post##', '', $content, $count5);
-    $count6 = 0;
+    $count6 = 0; //Same, but for the bottom.
     $content = str_replace('##no_bottom_post##', '', $content, $count6);
-    $count7 = 0;
+    $count7 = 0; //We don't want to echo the content twice if they chose an override of placement.
     if(get_option('2mb_autocode_toptype') == 0) {
         $content = str_replace('##do_top##', do_shortcode(get_option('2mb_autocode_topstring')), $content, $count7);
     }
@@ -68,7 +68,7 @@ function twomb_autocode_modify_content($content) {
     else {
         $content = str_replace('##do_top##', '<pre>'.get_option('2mb_autocode_topstring').'</pre>', $content, $count7);
     }
-    $count8 = 0;
+    $count8 = 0; //Same, but for bottom.
     if(get_option('2mb_autocode_bottomtype') == 0) {
         $content = str_replace('##do_bottom##', do_shortcode(get_option('2mb_autocode_bottomstring')), $content, $count8);
     }
@@ -82,34 +82,34 @@ function twomb_autocode_modify_content($content) {
     else {
         $content = str_replace('##do_bottom##', '<pre>'.get_option('2mb_autocode_bottomstring').'</pre>', $content, $count8);
     }
-    $count9 = 0;
+    $count9 = 0; //Check if they had an override to the home pages (for the top content).
     $content = str_replace('##do_top_home##', '', $content, $count9);
-    $count10 = 0;
+    $count10 = 0; //Same, but for bottom.
     $content  = str_replace('##do_bottom_home##', '', $content, $count10);
     $top = 1;
     $bottom = 1;
-    if($count > 0) {
+    if($count > 0) { //They told us not to echo the top content anywhere.
         $top = 0;
     }
-    if(($count3 > 0 || get_option('2mb_autocode_tophome') == 0) && !is_single()) {
+    if(($count3 > 0 || get_option('2mb_autocode_tophome') == 0) && !is_single()) { //Top content shouldn't be shown on the home page.
         $top = 0;
     }
-    if($count5 > 0 && is_single()){
+    if($count5 > 0 && is_single()){ //It shouldn't be shown on the single pages.
         $top = 0;
     }
-    if($count2 > 0) {
+    if($count2 > 0) { //See count1, but for bottom.
         $bottom = 0;
     }
-    if(($count4 > 0 || get_option('2mb_autocode_tophome') == 0) && !is_single()) {
+    if(($count4 > 0 || get_option('2mb_autocode_tophome') == 0) && !is_single()) { //Same, but see count2.
         $bottom = 0;
     }
-    if($count6 > 0 && is_single()){
+    if($count6 > 0 && is_single()) { //Ditto, see count 5.
         $bottom = 0;
     }
-    if($count9 > 0 && !is_single()) {
+    if($count9 > 0 && !is_single()) { //They told us to put it on the home page.
         $top = 1;
     }
-    if($count10  > 0 && !is_single()) {
+    if($count10  > 0 && !is_single()) { //Same, but for bottom.
         $bottom = 1;
     }
     global $post;
@@ -129,72 +129,72 @@ function twomb_autocode_modify_content($content) {
     if($bottom_force == '') {
         $bottom_force = 0;
     }
-    if($tophome_force == 1 && !is_single()) {
+    if($tophome_force == 1 && !is_single()) { //The meta box in the post editor said to put it on the home page.
         $top = 1;
     }
-    else if($tophome_force == 2 && !is_single()) {
+    else if($tophome_force == 2 && !is_single()) { //They told us not to.
         $top = 0;
     }
-    if($bottomhome_force == 1 && !is_single()) {
+    if($bottomhome_force == 1 && !is_single()) { //They told us to put the bottom content on the homepage.
         $bottom = 1;
     }
-    else if($bottomhome_force == 2 && !is_single()) {
+    else if($bottomhome_force == 2 && !is_single()) { //They told us not to.
         $bottom = 0;
     }
-    if($top_force == 1 && is_single()) {
+    if($top_force == 1 && is_single()) { //Force it on on the post page.
         $top = 1;
     }
-    else if($top_force == 2 && is_single()) {
+    else if($top_force == 2 && is_single()) { //Force it off.
         $top = 0;
     }
-    if($bottom_force == 1 && is_single()) {
+    if($bottom_force == 1 && is_single()) { //Force the bottom text on on the post page.
         $bottom = 1;
     }
-    if($bottom_force == 2 && is_single()) {
+    if($bottom_force == 2 && is_single()) { //Force it off.
         $bottom = 0;
     }
-    if($count7 > 0) {
+    if($count7 > 0) { //We already echoed the top content.
         $top = 0;
     }
-    if($count8 > 0) {
+    if($count8 > 0) { //Yep, we echoed the bottom.
         $bottom = 0;
     }
-    if($top == 1) {
-        if(get_option('2mb_autocode_toptype') == 1) {
+    if($top == 1) { //Finally, we need to display the content!
+        if(get_option('2mb_autocode_toptype') == 1) { //php
             ob_start();
             eval(get_option('2mb_autocode_topstring'));
             $string = ob_get_contents();
             ob_end_clean();
             $content = do_shortcode($string).$content;
         }
-        else if(get_option('2mb_autocode_toptype') == 2) {
+        else if(get_option('2mb_autocode_toptype') == 2) { //Pre-formatted text.
             $content = '<pre>'.get_option('2mb_autocode_topstring').'</pre>'.$content;
         }
-        else {
+        else { //html.
             $content = do_shortcode(get_option('2mb_autocode_topstring')).$content;
         }
     }
-    if($bottom == 1) {
-        if(get_option('2mb_autocode_bottomtype') == 1) {
+    if($bottom == 1) { //We need to echo the bottom content.
+        if(get_option('2mb_autocode_bottomtype') == 1) { //php
             ob_start();
             eval(get_option('2mb_autocode_bottomstring'));
             $string = ob_get_contents();
             ob_end_clean();
             $content = $content.do_shortcode($string);
         }
-        else if(get_option('2mb_autocode_bottomtype') == 2) {
+        else if(get_option('2mb_autocode_bottomtype') == 2) { //pre-formatted text.
             $content = $content.'<pre>'.get_option('2mb_autocode_bottomstring').'</pre>';
         }
-        else {
+        else { //html
             $content = $content.do_shortcode(get_option('2mb_autocode_bottomstring'));
         }
     }
     return $content;
 }
 
-add_action('the_content', 'twomb_autocode_do_php', 0);
+add_action('the_content', 'twomb_autocode_do_php', 0); //Parse php in the post with [php] ... [/php] tags.
 function twomb_autocode_do_php($content) {
-    $content = preg_replace_callback('/\[php\]((.|\n)+)\[\/php\]/', 'twomb_autocode_exec_php', $content);
+    $content = preg_replace_callback('/\[php\]((.|\n)+)\[\/php\]/', 'twomb_autocode_exec_php', $content); //I know, weird regex.
     return $content;
 }
 
@@ -206,7 +206,7 @@ function twomb_autocode_exec_php($matches) {
     return $output;
 }
 
-add_action('admin_menu', 'twomb_autocode_init_admin_menu');
+add_action('admin_menu', 'twomb_autocode_init_admin_menu'); //Make our sub-menu.
 function twomb_autocode_init_admin_menu() {
     add_options_page('Autocode Options', 'Autocode', 'manage_options', 'twomb-autocode-settings', 'twomb_autocode_options');
 }
@@ -231,7 +231,7 @@ function twomb_autocode_options() {
     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_SM.gif" border="0" alt="PayPal - The safer, easier way to pay online!">
     </form>
     <br>
-    Also please consider visiting our website to stay up to date on 2MB Solutions news, plugins, offers, and more. <a href="http://2mb.solutions/">Click here to visit</a>.
+    Also please consider visiting our website to stay up to date on 2MB Solutions news, plugins, offers, and more. <a href="https://2mb.solutions/">Click here to visit</a>.
     </p>
 <form method="post" action="options.php">
     <?php
@@ -252,13 +252,13 @@ function twomb_autocode_options() {
 <li>To place the top or bottom text at a different point than at the top or bottom, enter ##do_bottom## or ##do_top## where you want them in the post editor.</li>
     </ul>
     <br>
-    Remember, feedback is most welcome! <a href="http://2mb.solutions/">Visit our homepage to suggest a feature, a new plugin, and more</a>.
+    Remember, feedback is most welcome! <a href="https://2mb.solutions/">Visit our homepage to suggest a feature, a new plugin, and more</a>.
     </p>
     </div>
     <?php
 }
 
-add_action('admin_init', 'twomb_autocode_init_settings');
+add_action('admin_init', 'twomb_autocode_init_settings'); //Init settings pages.
 function twomb_autocode_init_settings() {
     add_settings_section('twomb-autocode-settings', 'Autocode Options', 'twomb_autocode_print_section', 'twomb-autocode-settings');
     register_setting('twomb-autocode-settings', '2mb_autocode_topstring', 'twomb_autocode_topstring_sanitize');
@@ -374,8 +374,7 @@ function twomb_autocode_bottomhome_print() {
     <?php
 }
 
-register_activation_hook(__FILE__, 'twomb_autocode_activate');
-
+register_activation_hook(__FILE__, 'twomb_autocode_activate'); //Activate and add options.
 function twomb_autocode_activate() {
     add_option('2mb_autocode_bottomstring', '');
     add_option('2mb_autocode_topstring', '');
@@ -393,7 +392,7 @@ function twomb_autocode_print_section() {
     <?php
 }
 
-add_action('add_meta_boxes', 'twomb_autocode_add_meta_box');
+add_action('add_meta_boxes', 'twomb_autocode_add_meta_box'); //For the post editor.
 function twomb_autocode_add_meta_box() {
     add_meta_box('2mb_autocode_options', 'Autocode Options', 'twomb_autocode_post_options', 'post');
 }
@@ -462,7 +461,7 @@ Should the bottom text be appended to this post? Note: The first option means th
 <?php
 }
 
-add_action( 'save_post', 'twomb_autocode_save_meta_box_data' );
+add_action( 'save_post', 'twomb_autocode_save_meta_box_data' ); //Save the changed settings.
 function twomb_autocode_save_meta_box_data( $post_id ) {
     if ( !isset( $_POST['twomb_autocode_meta_box_nonce'] ) ) {
         return;
@@ -507,5 +506,4 @@ function twomb_autocode_save_meta_box_data( $post_id ) {
     update_post_meta($post_id, '2mb_autocode_top_force', $top);
     update_post_meta($post_id, '2mb_autocode_bottom_force', $bottom);
 }
-
 ?>

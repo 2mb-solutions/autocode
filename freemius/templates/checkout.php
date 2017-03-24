@@ -15,6 +15,7 @@
 	fs_enqueue_local_script( 'postmessage', 'nojquery.ba-postmessage.min.js' );
 	fs_enqueue_local_script( 'fs-postmessage', 'postmessage.js' );
 	fs_enqueue_local_style( 'fs_common', '/admin/common.css' );
+	fs_enqueue_local_style( 'fs_checkout', '/admin/checkout.css' );
 
 	/**
 	 * @var array $VARS
@@ -25,20 +26,36 @@
 	$timestamp = time();
 
 	$context_params = array(
-		'plugin_id'         => $fs->get_id(),
-		'plugin_public_key' => $fs->get_public_key(),
-		'plugin_version'    => $fs->get_plugin_version(),
+		'plugin_id'      => $fs->get_id(),
+		'plugin_version' => $fs->get_plugin_version(),
+        'public_key'     => $fs->get_public_key(),
+        'mode'           => 'dashboard',
+        'trial'          => fs_request_get_bool( 'trial' ),
 	);
+
+	$plan_id = fs_request_get( 'plan_id' );
+	if ( FS_Plugin_Plan::is_valid_id( $plan_id ) ) {
+        $context_params['plan_id'] = $plan_id;
+    }
+
+    $licenses = fs_request_get( 'licenses' );
+    if ( $licenses === strval( intval( $licenses ) ) && $licenses > 0 ) {
+        $context_params['licenses'] = $licenses;
+    }
+
+	$plugin_id = fs_request_get( 'plugin_id' );
+	if ( ! FS_Plugin::is_valid_id( $plugin_id ) ) {
+		$plugin_id = $fs->get_id();
+	}
 
 	// Get site context secure params.
 	if ( $fs->is_registered() ) {
 		$site = $fs->get_site();
-		$plugin_id = fs_request_get( 'plugin_id', $fs->get_id() );
 
-		if ($plugin_id != $fs->get_id()) {
+		if ( $plugin_id != $fs->get_id() ) {
 			if ( $fs->is_addon_activated( $plugin_id ) ) {
 				$fs_addon = Freemius::get_instance_by_id( $plugin_id );
-				$site = $fs_addon->get_site();
+				$site     = $fs_addon->get_site();
 			}
 		}
 
@@ -57,17 +74,7 @@
 			'user_firstname' => $current_user->user_firstname,
 			'user_lastname'  => $current_user->user_lastname,
 			'user_email'     => $current_user->user_email,
-//			'user_nickname'    => $current_user->user_nicename,
-//			'plugin_slug'      => $slug,
-//			'site_url'         => get_site_url(),
-//			'site_name'        => get_bloginfo( 'name' ),
-//			'platform_version' => get_bloginfo( 'version' ),
-//			'language'         => get_bloginfo( 'language' ),
-//			'charset'          => get_bloginfo( 'charset' ),
-//			'account_url'      => fs_nonce_url( $fs->_get_admin_page_url(
-//				'account',
-//				array( 'fs_action' => 'sync_user' )
-//			), 'sync_user' ),
+			'home_url'       => home_url(),
 		) );
 
 		$fs_user = Freemius::_get_user_by_email( $current_user->user_email );
@@ -81,8 +88,7 @@
 		}
 	}
 
-	if ( $fs->is_payments_sandbox() )
-	{
+	if ( $fs->is_payments_sandbox() ) {
 		// Append plugin secure token for sandbox mode authentication.
 		$context_params['sandbox'] = FS_Security::instance()->get_secure_token(
 			$fs->get_plugin(),
@@ -98,7 +104,7 @@
 		}
 	}
 
-	$return_url = $fs->_get_sync_license_url( isset( $_GET['plugin_id'] ) ? $_GET['plugin_id'] : $fs->get_id() );
+	$return_url = $fs->_get_sync_license_url( $plugin_id );
 
 	$query_params = array_merge( $context_params, $_GET, array(
 		// Current plugin version.
@@ -108,8 +114,13 @@
 		// Admin CSS URL for style/design competability.
 //		'wp_admin_css'   => get_bloginfo('wpurl') . "/wp-admin/load-styles.php?c=1&load=buttons,wp-admin,dashicons",
 	) );
+
+	$xdebug_session = fs_request_get( 'XDEBUG_SESSION' );
+	if ( false !== $xdebug_session ) {
+	    $query_params['XDEBUG_SESSION'] = $xdebug_session;
+    }
 ?>
-	<div id="fs_checkout" class="wrap" style="margin: 0 0 -65px -20px;">
+	<div id="fs_checkout" class="wrap fs-full-size-wrapper">
 		<div id="iframe"></div>
 		<script type="text/javascript">
 			// http://stackoverflow.com/questions/4583703/jquery-post-request-not-ajax
@@ -162,16 +173,16 @@
 				$(function () {
 
 					var
-					// Keep track of the iframe height.
-					iframe_height = 800,
-					base_url = '<?php echo WP_FS__ADDRESS ?>',
-					// Pass the parent page URL into the Iframe in a meaningful way (this URL could be
-					// passed via query string or hard coded into the child page, it depends on your needs).
-					src = base_url + '/checkout/?<?php echo (isset($_REQUEST['XDEBUG_SESSION']) ? 'XDEBUG_SESSION=' . $_REQUEST['XDEBUG_SESSION'] . '&' : '') . http_build_query($query_params) ?>#' + encodeURIComponent(document.location.href),
+						// Keep track of the iframe height.
+						iframe_height = 800,
+						base_url      = '<?php echo FS_CHECKOUT__ADDRESS ?>',
+						// Pass the parent page URL into the Iframe in a meaningful way (this URL could be
+						// passed via query string or hard coded into the child page, it depends on your needs).
+						src           = base_url + '/?<?php echo http_build_query( $query_params ) ?>#' + encodeURIComponent(document.location.href),
 
-					// Append the Iframe into the DOM.
-					iframe = $('<iframe " src="' + src + '" width="100%" height="' + iframe_height + 'px" scrolling="no" frameborder="0" style="background: transparent;"><\/iframe>')
-						.appendTo('#iframe');
+						// Append the Iframe into the DOM.
+						iframe        = $('<iframe " src="' + src + '" width="100%" height="' + iframe_height + 'px" scrolling="no" frameborder="0" style="background: transparent;"><\/iframe>')
+							.appendTo('#iframe');
 
 					FS.PostMessage.init(base_url, [iframe[0]]);
 					FS.PostMessage.receiveOnce('height', function (data) {
@@ -186,10 +197,10 @@
 
 					FS.PostMessage.receiveOnce('install', function (data) {
 						// Post data to activation URL.
-						$.form('<?php echo fs_nonce_url($fs->_get_admin_page_url('account', array(
+						$.form('<?php echo fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
 							'fs_action' => $slug . '_activate_new',
-							'plugin_id' => isset($_GET['plugin_id']) ? $_GET['plugin_id'] : $fs->get_id()
-							)), $slug . '_activate_new') ?>', {
+							'plugin_id' => $plugin_id
+						) ), $slug . '_activate_new' ) ?>', {
 							user_id           : data.user.id,
 							user_secret_key   : data.user.secret_key,
 							user_public_key   : data.user.public_key,
@@ -200,11 +211,11 @@
 					});
 
 					FS.PostMessage.receiveOnce('pending_activation', function (data) {
-						$.form('<?php echo fs_nonce_url($fs->_get_admin_page_url('account', array(
-							'fs_action' => $slug . '_activate_new',
-							'plugin_id' => fs_request_get('plugin_id', $fs->get_id()),
+						$.form('<?php echo fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
+							'fs_action'          => $slug . '_activate_new',
+							'plugin_id'          => $plugin_id,
 							'pending_activation' => true,
-							)), $slug . '_activate_new') ?>', {
+						) ), $slug . '_activate_new' ) ?>', {
 							user_email: data.user_email
 						}).submit();
 					});
@@ -217,48 +228,34 @@
 						// and then click the purchase button, the context information
 						// of the user will be shared with Freemius in order to complete the
 						// purchase workflow and activate the license for the right user.
-						FS.PostMessage.post('context', {
-							plugin_id        : '<?php echo $fs->get_id() ?>',
-							plugin_public_key: '<?php echo $fs->get_public_key() ?>',
-							plugin_version   : '<?php echo $fs->get_plugin_version() ?>',
-							plugin_slug      : '<?php echo $slug ?>',
-							site_name        : '<?php echo get_bloginfo('name') ?>',
-							platform_version : '<?php echo get_bloginfo('version') ?>',
-							language         : '<?php echo get_bloginfo('language') ?>',
-							charset          : '<?php echo get_bloginfo('charset') ?>',
-							return_url       : '<?php echo $return_url ?>',
-							account_url      : '<?php echo fs_nonce_url($fs->_get_admin_page_url(
-									'account',
-									array('fs_action' => 'sync_user')
-						), 'sync_user') ?>',
-							activation_url   : '<?php echo fs_nonce_url($fs->_get_admin_page_url('',
-							array(
-								'fs_action' => $slug . '_activate_new',
-								'plugin_id' => fs_request_get('plugin_id', $fs->get_id()),
+						<?php $install_data = array_merge( $fs->get_opt_in_params(),
+						array(
+							'activation_url' => fs_nonce_url( $fs->_get_admin_page_url( '',
+								array(
+									'fs_action' => $slug . '_activate_new',
+									'plugin_id' => $plugin_id,
 
-								)),
-							$slug . '_activate_new') ?>'
-						}, iframe[0]);
+								) ),
+								$slug . '_activate_new' )
+						) ) ?>
+						FS.PostMessage.post('context', <?php echo json_encode( $install_data ) ?>, iframe[0]);
 					});
 
 					FS.PostMessage.receiveOnce('get_dimensions', function (data) {
-						console.debug('receiveOnce', 'get_dimensions');
-
 						FS.PostMessage.post('dimensions', {
 							height   : $(document.body).height(),
 							scrollTop: $(document).scrollTop()
 						}, iframe[0]);
 					});
+
+					var updateHeight = function(){
+						iframe.css('min-height', $('#wpwrap').height() + 'px');
+					};
+
+					$(document).ready(updateHeight);
+
+					$(window).resize(updateHeight)
 				});
 			})(jQuery);
 		</script>
 	</div>
-<?php
-	$params = array(
-		'page'           => 'checkout',
-		'module_id'      => $fs->get_id(),
-		'module_slug'    => $slug,
-		'module_version' => $fs->get_plugin_version(),
-	);
-	fs_require_template( 'powered-by.php', $params );
-?>

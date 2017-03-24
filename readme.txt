@@ -1,10 +1,10 @@
 === 2MB Autocode ===
 Contributors: lilmike, stormdragon2976
-Donate link: http://2mb.solutions/donate
+Donate link: https://2mb.solutions/donate
 Tags: autocode, code placement, automatic, php, html, preformatted text, top, bottom, modify posts
 Requires at least: 3.0
-Tested up to: 4.6.1
-Stable tag: 1.2.3
+Tested up to: 4.7.3
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,11 +12,11 @@ This plugin allows you to place predetermined text/html/php at the top or bottom
 
 == Description ==
 
-This plugin, developed by [2MB Solutions](http://2mb.solutions/), allows you to place predetermined text/html/php at the top and/or bottom of each post. In addition, you can override the placing of text at the bottom and/or top of a specific post, override the placing of text on the homepage or on a post individually, or run arbitrary php inside a post.
+This plugin, developed by [2MB Solutions](https://2mb.solutions/), allows you to place predetermined text/html/php at the top and/or bottom of each post. In addition, you can override the placing of text at the bottom and/or top of a specific post, override the placing of text on the homepage or on a post individually, or run arbitrary php inside a post.
 
-For more on 2MB, please visit (http://2mb.solutions/).
+For more on 2MB, please visit (https://2mb.solutions/).
 
-Note that all development now takes place at [github](http://github.com/2mb-solutions/autocode/).
+Note that all development now takes place at [github](https://github.com/2mb-solutions/autocode/).
 
 == Installation ==
 
@@ -41,7 +41,7 @@ Simply put ##no_top## or ##no_bottom## anywhere in the post, and it will remove 
 
 = How do I suggest a feature or new plugin? =
 
-We're glad you asked! We're always looking for new ways to improve, whether in the realm of new plugins, or upgrading existing ones. Please go to our [website](http://2mb.solutions/), and click contact us. There you will be able to email us a message. Rest assured we read every email we receive and strive to respond to as many as possible!
+We're glad you asked! We're always looking for new ways to improve, whether in the realm of new plugins, or upgrading existing ones. Please go to our [website](https://2mb.solutions/), and click contact us. There you will be able to email us a message. Rest assured we read every email we receive and strive to respond to as many as possible!
 
 = How do I run php inside a post? =
 
@@ -67,13 +67,17 @@ Do not worry, the fix is a simple one:
 
 = Why isn't any development taking place at wordpress.org? =
 
-We have now moved our official development version to [github](http://github.com/2mb-solutions/autocode/). Feel free to test the code if you wish, and/or open issues over there although any issues or problems reported on the wordpress.org forums will also be dealt with.
+We have now moved our official development version to [github](https://github.com/2mb-solutions/autocode/). Feel free to test the code if you wish, and/or open issues over there although any issues or problems reported on the wordpress.org forums will also be dealt with.
 
 == Screenshots ==
 
 No screen shots at the moment. Sorry!
 
 == Changelog ==
+= 1.2.4 =
+
+* updated freemius
+* Added ample comments :-).
 
 = 1.2.3 =
 
@@ -103,17 +107,15 @@ No screen shots at the moment. Sorry!
 *Added ##do_top_home## and ##do_bottom_home## to put text on the top or bottom of a post on the homepage even if the checkbox in settings is unchecked.
 
 = 1.1 =
+
 *Added ##do_top## and  ##do_bottom## to place the bottom or top text anywhere in a post.
-
 *Added ##no_top_home##, ##no_bottom_home##, ##no_top_post##, and ##no_bottom_post## to override the placing of text specifically on the home or post pages.
-
 *Added [php] PHP CODE HERE [/php] to run php inside a post.
-
 *Very important! Fixed an issue where php at the top or bottom of posts would not run, and could possibly crash programs or make them not work correctly.
-
 *Fixed a possible bug where php code in the top or bottom of the post may have been echoing to the wrong part of the screen.
 
 = 1.0 =
+
 *First release. woohoo!
 
 == Upgrade Notice ==
@@ -127,19 +129,21 @@ This is a bug fix release. If you use ##do_top## or ##do_bottom##, this is for y
 You can now override text placement on a per-post basis in the editor, instead of having to use special tags. Also if your text was not showing on each post when the home checkbox was unchecked, this fixes that issue.
 
 = 1.1.2 =
+
 If you use inline php to do your php inside posts:
 
 *You don't need to anymore, as this plugin will handle it for you.
-
 *Please update to this version or uninstall the inline php plugin because the two plugins conflict. This has now been fixed.
-
 *If your blog is totally broken and you cannot access the admin panel to remove the plugin inline php, then simply delete the inline php plugin folder from your server, and the problem will be solved. Sorry for any inconvenience (even coding ninjas are durps sometimes too, ;-))
 
 = 1.1.1 =
-If you didn't know how to use the plugin... this update is for you. This update adds documentation inside the plugin, as well as adds ##do_top_home## and ##do_bottom_home## to force displaying the text on a per-post basis on the homepage, no matter what the checkbox says in the options pannel.
+
+* If you didn't know how to use the plugin... this update is for you. This update adds documentation inside the plugin, as well as adds ##do_top_home## and ##do_bottom_home## to force displaying the text on a per-post basis on the homepage, no matter what the checkbox says in the options pannel.
 
 = 1.1 =
-If you were using php at the top or bottom of a post, please upgrade to this version as this fixes a possibility that the php code would not run or the php may have echoed to the wrong part of the screen. In addition if you want to run php code in your posts without having to add it to every post, then you may like this release. Also, if you wish to turn off the placing of text on a per post basis for the home and/or single post pages, this update is for you.
+
+*If you were using php at the top or bottom of a post, please upgrade to this version as this fixes a possibility that the php code would not run or the php may have echoed to the wrong part of the screen. In addition if you want to run php code in your posts without having to add it to every post, then you may like this release. Also, if you wish to turn off the placing of text on a per post basis for the home and/or single post pages, this update is for you.
 
 = 1.0 =
-Because this plugin is awesome! Seriously, go try it! ;-)
+
+* Because this plugin is awesome! Seriously, go try it! ;-)

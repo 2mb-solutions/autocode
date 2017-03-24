@@ -15,7 +15,7 @@
 	 *
 	 * @var string
 	 */
-	$this_sdk_version = '1.2.1';
+	$this_sdk_version = '1.2.1.6.1';
 
 	#region SDK Selection Logic --------------------------------------------------------------------
 
@@ -84,13 +84,11 @@
 			}
 
 			// Refresh page.
-			if ( fs_redirect( $_SERVER['REQUEST_URI'] ) ) {
-				exit();
-			}
+			fs_redirect( $_SERVER['REQUEST_URI'] );
 		}
 	} else {
 		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		$is_newest_sdk_plugin_activate = is_plugin_active( $fs_active_plugins->newest->plugin_path );
@@ -144,9 +142,7 @@
 				if ( fs_newest_sdk_plugin_first() ) {
 					// Refresh page after re-order to make sure activated plugin loads newest SDK.
 					if ( class_exists( 'Freemius' ) ) {
-						if ( fs_redirect( $_SERVER['REQUEST_URI'] ) ) {
-							exit();
-						}
+						fs_redirect( $_SERVER['REQUEST_URI'] );
 					}
 				}
 			}

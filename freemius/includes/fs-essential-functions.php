@@ -41,15 +41,24 @@
 		 * @since 1.5.1
 		 * @uses  apply_filters() Calls 'wp_redirect' hook on $location and $status.
 		 *
-		 * @param string $location The path to redirect to
-		 * @param int    $status   Status code to use
+		 * @param string $location The path to redirect to.
+		 * @param bool   $exit     If true, exit after redirect (Since 1.2.1.5).
+		 * @param int    $status   Status code to use.
 		 *
 		 * @return bool False if $location is not set
 		 */
-		function fs_redirect( $location, $status = 302 ) {
+		function fs_redirect( $location, $exit = true, $status = 302 ) {
 			global $is_IIS;
 
-			if ( headers_sent() ) {
+			$file = '';
+			$line = '';
+			if ( headers_sent($file, $line) ) {
+				if ( WP_FS__DEBUG_SDK && class_exists( 'FS_Admin_Notice_Manager' ) ) {
+					$notices = FS_Admin_Notice_Manager::instance( 'global' );
+
+					$notices->add( "Freemius failed to redirect the page because the headers have been already sent from line <b><code>{$line}</code></b> in file <b><code>{$file}</code></b>. If it's unexpected, it usually happens due to invalid space and/or EOL character(s).", 'Oops...', 'error' );
+				}
+
 				return false;
 			}
 
@@ -72,6 +81,10 @@
 					status_header( $status );
 				} // This causes problems on IIS and some FastCGI setups
 				header( "Location: $location" );
+			}
+
+			if ( $exit ) {
+				exit();
 			}
 
 			return true;
@@ -150,11 +163,9 @@
 		 * @global       $fs_text , $fs_text_overrides
 		 */
 		function __fs( $key, $slug = 'freemius' ) {
-			global $fs_text, $fs_text_overrides;
-
-			if ( ! isset( $fs_text ) ) {
-				require_once( ( defined( 'WP_FS__DIR_INCLUDES' ) ? WP_FS__DIR_INCLUDES : dirname( __FILE__ ) ) . '/i18n.php' );
-			}
+			global $fs_text,
+			       $fs_module_info_text,
+			       $fs_text_overrides;
 
 			if ( isset( $fs_text_overrides[ $slug ] ) ) {
 				if ( isset( $fs_text_overrides[ $slug ][ $key ] ) ) {
@@ -167,9 +178,23 @@
 				}
 			}
 
-			return isset( $fs_text[ $key ] ) ?
-				$fs_text[ $key ] :
-				$key;
+			if ( ! isset( $fs_text ) ) {
+				$dir = defined( 'WP_FS__DIR_INCLUDES' ) ?
+					WP_FS__DIR_INCLUDES :
+					dirname( __FILE__ );
+
+				require_once $dir . '/i18n.php';
+			}
+
+			if ( isset( $fs_text[ $key ] ) ) {
+				return $fs_text[ $key ];
+			}
+
+			if ( isset( $fs_module_info_text[ $key ] ) ) {
+				return $fs_module_info_text[ $key ];
+			}
+
+			return $key;
 		}
 
 		/**
@@ -254,7 +279,7 @@
 		 * will catch it.
 		 */
 		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		$all_plugins       = get_plugins();
@@ -412,7 +437,7 @@
 		$args = func_get_args();
 
 		return call_user_func_array( 'apply_filters', array_merge(
-				array( 'fs_' . $tag . '_' . $slug ),
+				array( "fs_{$tag}_{$slug}" ),
 				array_slice( $args, 2 ) )
 		);
 	}

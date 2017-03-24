@@ -5,6 +5,7 @@
 	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 	 * @since       1.0.7
 	 */
+
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
@@ -51,6 +52,68 @@
 		 * @return bool
 		 */
 		abstract function is_activation_mode();
+
+		#endregion
+
+		#----------------------------------------------------------------------------------
+		#region Usage Tracking
+		#----------------------------------------------------------------------------------
+
+		/**
+		 * Returns TRUE if the user opted-in and didn't disconnect (opt-out).
+		 *
+		 * @author Leo Fajardo (@leorw)
+		 * @since 1.2.1.5
+		 *
+		 * @return bool
+		 */
+		abstract function is_tracking_allowed();
+
+		/**
+		 * Returns TRUE if the user never opted-in or manually opted-out.
+		 *
+		 * @author Vova Feldman (@svovaf)
+		 * @since 1.2.1.5
+		 *
+		 * @return bool
+		 */
+		function is_tracking_prohibited() {
+			return ! $this->is_registered() || ! $this->is_tracking_allowed();
+		}
+
+		/**
+		 * Opt-out from usage tracking.
+		 *
+		 * Note: This will not delete the account information but will stop all tracking.
+		 *
+		 * Returns:
+		 *  1. FALSE  - If the user never opted-in.
+		 *  2. TRUE   - If successfully opted-out.
+		 *  3. object - API Result on failure.
+		 *
+		 * @author Leo Fajardo (@leorw)
+		 * @since  1.2.1.5
+		 *
+		 * @return bool|object
+		 */
+		abstract function stop_tracking();
+
+		/**
+		 * Opt-in back into usage tracking.
+		 *
+		 * Note: This will only work if the user opted-in previously.
+		 *
+		 * Returns:
+		 *  1. FALSE  - If the user never opted-in.
+		 *  2. TRUE   - If successfully opted-in back to usage tracking.
+		 *  3. object - API result on failure.
+		 *
+		 * @author Leo Fajardo (@leorw)
+		 * @since  1.2.1.5
+		 *
+		 * @return bool|object
+		 */
+		abstract function allow_tracking();
 
 		#endregion
 
@@ -165,7 +228,7 @@
 		 *
 		 * @since  1.0.9
 		 *
-		 * @param string $plan  Plan name
+		 * @param string $plan  Plan name.
 		 * @param bool   $exact If true, looks for exact plan. If false, also check "higher" plans.
 		 *
 		 * @return bool
@@ -181,7 +244,7 @@
 		 *
 		 * @since  1.0.9
 		 *
-		 * @param string $plan  Plan name
+		 * @param string $plan  Plan name.
 		 * @param bool   $exact If true, looks for exact plan. If false, also check "higher" plans.
 		 *
 		 * @return bool
@@ -273,7 +336,7 @@
 		/**
 		 * @since  1.0.2
 		 *
-		 * @param string $plan  Plan name
+		 * @param string $plan  Plan name.
 		 * @param bool   $exact If true, looks for exact plan. If false, also check "higher" plans.
 		 *
 		 * @return bool
@@ -285,7 +348,7 @@
 		 *
 		 * @since  1.0.9
 		 *
-		 * @param string $plan  Plan name
+		 * @param string $plan  Plan name.
 		 * @param bool   $exact If true, looks for exact plan. If false, also check "higher" plans.
 		 *
 		 * @return bool
@@ -297,7 +360,7 @@
 		 *
 		 * @since  1.0.9
 		 *
-		 * @param string $plan  Plan name
+		 * @param string $plan  Plan name.
 		 * @param bool   $exact If true, looks for exact plan. If false, also check "higher" plans.
 		 *
 		 * @return bool
@@ -340,6 +403,31 @@
 		 * @return bool
 		 */
 		abstract function is_only_premium();
+
+		/**
+		 * Check if module has a premium code version.
+		 *
+		 * Serviceware module might be freemium without any
+		 * premium code version, where the paid features
+		 * are all part of the service.
+		 *
+		 * @author Vova Feldman (@svovaf)
+		 * @since  1.2.1.6
+		 *
+		 * @return bool
+		 */
+		abstract function has_premium_version();
+
+		/**
+		 * Check if module has any release on Freemius,
+		 * or all plugin's code is on WordPress.org (Serviceware).
+		 *
+		 * @return bool
+		 */
+		function has_release_on_freemius() {
+			return ! $this->is_org_repo_compliant() ||
+			       $this->has_premium_version();
+		}
 
 		/**
 		 * Checks if it's a freemium plugin.
@@ -389,7 +477,7 @@
 		 * @author Vova Feldman (@svovaf)
 		 * @since  1.0.2
 		 *
-		 * @param string $period Billing cycle
+		 * @param string $period Billing cycle.
 		 *
 		 * @return string
 		 */
