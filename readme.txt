@@ -4,7 +4,7 @@ Donate link: https://2mb.solutions/donate
 Tags: autocode, code placement, automatic, php, html, preformatted text, top, bottom, modify posts
 Requires at least: 3.0
 Tested up to: 4.7.3
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,11 +69,25 @@ Do not worry, the fix is a simple one:
 
 We have now moved our official development version to [github](https://github.com/2mb-solutions/autocode/). Feel free to test the code if you wish, and/or open issues over there although any issues or problems reported on the wordpress.org forums will also be dealt with.
 
+= The white screen of death appears after upgrading to 1.2.4! Help! =
+
+Note this only happens on the admin, so if this happens:
+
+1. Use ftp (or any other method of your choice) to move the wp-content/plugins/2mb-autocode folder to a new name, for example 2mb-autocode.old
+1. Reinstall or upgrade 2mb-autocode to 1.2.5.
+1. This should fix your problem, at which point you can delete the 2mb-autocode.old folder, or if you upgraded it, move it back to 2mb-autocde
+
+Note that no settings will be lost in this transition.
+
 == Screenshots ==
 
 No screen shots at the moment. Sorry!
 
 == Changelog ==
+= 1.2.5 =
+
+* fixed missing file in freemius.
+
 = 1.2.4 =
 
 * updated freemius
@@ -103,7 +117,6 @@ No screen shots at the moment. Sorry!
 = 1.1.1 =
 
 *Added documentation to the plugin itself.
-
 *Added ##do_top_home## and ##do_bottom_home## to put text on the top or bottom of a post on the homepage even if the checkbox in settings is unchecked.
 
 = 1.1 =
@@ -119,6 +132,10 @@ No screen shots at the moment. Sorry!
 *First release. woohoo!
 
 == Upgrade Notice ==
+
+= 1.2.5 =
+
+Please upgrade to this version as soon as possible, as 1.2.4 broke the admin dashboard. If you can't get into your dashboard, see the FAQ for help.
 
 = 1.2.1 =
 
